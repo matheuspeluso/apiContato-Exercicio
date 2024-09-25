@@ -47,7 +47,7 @@ public class ContatoRepository {
 	
 	public List<Contato> getAll() throws Exception {
 		var connection = ConnectionFactory.getConnection();
-		var statement = connection.prepareStatement("SELECT idContato, nome, email, telefone FROM contatos ORDER BY name");
+		var statement = connection.prepareStatement("SELECT idContato, nome, email, telefone FROM contatos ORDER BY nome");
 		
 		var lista = new ArrayList<Contato>();
 		var resultSet = statement.executeQuery();
@@ -75,10 +75,13 @@ public class ContatoRepository {
 		Contato contato = null;
 		
 		if(resultSet.next()) {
+			contato = new Contato();
+			
 			contato.setIdContato(UUID.fromString(resultSet.getString("idContato")));
 			contato.setNome(resultSet.getString("nome"));
 			contato.setEmail(resultSet.getString("email"));
 			contato.setTelefone(resultSet.getString("telefone"));
+			
 		}
 		connection.close();
 		return contato;
