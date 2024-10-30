@@ -87,4 +87,27 @@ public class ContatoRepository {
 		return contato;
 		
 	}
+	
+	public boolean isExistsByTelefone(String telefone, UUID idContato) throws Exception {
+	    var connection = ConnectionFactory.getConnection();
+	    var statement = connection.prepareStatement("SELECT COUNT(telefone) AS qtd FROM contatos WHERE telefone =? AND idContato <> ?");
+	    
+	    statement.setString(1, telefone);
+	    statement.setString(2, idContato.toString());
+	    
+	    var resultSet = statement.executeQuery();
+	    var result = false;
+	    
+	    if (resultSet.next()) {
+	        var qtd = resultSet.getInt("qtd");
+	        result = (qtd == 1);
+	    }
+	    
+	    connection.close();
+	    
+	    return result;
+	}
+
+
+	
 }

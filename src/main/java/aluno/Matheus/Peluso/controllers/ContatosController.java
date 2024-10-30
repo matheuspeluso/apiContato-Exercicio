@@ -15,27 +15,29 @@ import org.springframework.web.bind.annotation.RestController;
 import aluno.Matheus.Peluso.dtos.ContatoRequestDto;
 import aluno.Matheus.Peluso.entities.Contato;
 import aluno.Matheus.Peluso.repositories.ContatoRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/contatos")
 public class ContatosController {
 	
 	@PostMapping
-	public String post(@RequestBody ContatoRequestDto request) throws Exception{
+	public String post(@RequestBody @Valid ContatoRequestDto request) throws Exception{
 		Contato contato = new Contato();
+		
 		contato.setIdContato(UUID.randomUUID());
 		contato.setNome(request.getNome());
 		contato.setEmail(request.getEmail());
 		contato.setTelefone(request.getTelefone());
 		
 		ContatoRepository contatoRepository = new ContatoRepository();
-		contatoRepository.create(contato);
 		
+		contatoRepository.create(contato);
 		return "Contato criado com sucesso!";
 	}
 	
 	@PutMapping("{idContato}")
-	public String put(@PathVariable UUID idContato, @RequestBody ContatoRequestDto request) throws Exception{
+	public String put(@PathVariable UUID idContato, @RequestBody @Valid ContatoRequestDto request) throws Exception{
 		
 		ContatoRepository contatoRepository = new ContatoRepository();
 		var contato = contatoRepository.getById(idContato);
@@ -45,10 +47,18 @@ public class ContatosController {
 			contato.setEmail(request.getEmail());
 			contato.setTelefone(request.getTelefone());
 			
-			contatoRepository.update(contato);
-			return "Contato atualizado com sucesso!";
+			if(!contatoRepository.isExistsByTelefone(contato.getTelefone(), contato.getIdContato())){
+				contatoRepository.update(contato);
+				return "Contato atualizado com sucesso!";
+			}else {
+				return "Não é possível atualizar os dados pois o Telefone '"
+						+ contato.getTelefone() +"' já pertence a outro contato.";
+			}
+			
+		}else {
+			return "Contato não encontrado! Verifique o ID informado.";
 		}
-		return "Contato não encontrado! Verifique o ID informado.";
+		
 	}
 	
 	@DeleteMapping("{idContato}")
@@ -70,14 +80,10 @@ public class ContatosController {
 	}
 	
 	@GetMapping("{idContato}")
-	public Contato getById(@PathVariable UUID idContato) throws Exception{
-		ContatoRepository contatoRepository = new ContatoRepository();
-		var contato = contatoRepository.getById(idContato);
-		
-		if(contato != null) {
-			return contato;
-		}
-		
-		return null;
+	public Contato getById(@PathVariable UUID id) throws Exception {
+	
+	var contatoRepository = new ContatoRepository();
+	return contatoRepository.getById(id);
 	}
+
 }
