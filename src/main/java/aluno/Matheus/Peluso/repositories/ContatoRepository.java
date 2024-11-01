@@ -90,7 +90,7 @@ public class ContatoRepository {
 	
 	public boolean isExistsByTelefone(String telefone, UUID idContato) throws Exception {
 	    var connection = ConnectionFactory.getConnection();
-	    var statement = connection.prepareStatement("SELECT COUNT(telefone) AS qtd FROM contatos WHERE telefone =? AND idContato <> ?");
+	    var statement = connection.prepareStatement("SELECT COUNT(telefone) AS qtd FROM contatos WHERE telefone = ? AND idContato <> ?::uuid");
 	    
 	    statement.setString(1, telefone);
 	    statement.setString(2, idContato.toString());

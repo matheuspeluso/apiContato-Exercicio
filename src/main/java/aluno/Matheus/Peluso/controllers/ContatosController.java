@@ -32,8 +32,12 @@ public class ContatosController {
 		
 		ContatoRepository contatoRepository = new ContatoRepository();
 		
-		contatoRepository.create(contato);
-		return "Contato criado com sucesso!";
+		if(!contatoRepository.isExistsByTelefone(contato.getTelefone(), contato.getIdContato())) {
+			contatoRepository.create(contato);
+			return "Contato criado com sucesso!";
+		}else {
+			return "O telefone " + contato.getTelefone() + " informado, já está cadastrado em outro contato. Tente com outro numero!";
+		}
 	}
 	
 	@PutMapping("{idContato}")
@@ -80,10 +84,10 @@ public class ContatosController {
 	}
 	
 	@GetMapping("{idContato}")
-	public Contato getById(@PathVariable UUID id) throws Exception {
+	public Contato getById(@PathVariable UUID idContato) throws Exception {
 	
 	var contatoRepository = new ContatoRepository();
-	return contatoRepository.getById(id);
+	return contatoRepository.getById(idContato);
 	}
 
 }
