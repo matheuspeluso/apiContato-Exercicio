@@ -1,5 +1,7 @@
 package aluno.Matheus.Peluso;
 
+import static org.assertj.core.api.Assertions.fail;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -7,7 +9,28 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ExercicioApiContatoApplicationTests {
 
 	@Test
-	void contextLoads() {
+	public void postTests() {
+		fail("Não implementado");
+	}
+	
+	@Test
+	public void putTests() {
+		fail("Não implementado");
+	}
+	
+	@Test
+	public void deleteTests() {
+		fail("Não implementado");
+	}
+	
+	@Test
+	public void getAllTests() {
+		fail("Não implementado");
+	}
+	
+	@Test
+	public void getByIdTests() {
+		fail("Não implementado");
 	}
 
 }

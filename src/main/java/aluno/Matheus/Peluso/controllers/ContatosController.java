@@ -20,74 +20,75 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("api/contatos")
 public class ContatosController {
-	
+
 	@PostMapping
-	public String post(@RequestBody @Valid ContatoRequestDto request) throws Exception{
+	public String post(@RequestBody @Valid ContatoRequestDto request) throws Exception {
 		Contato contato = new Contato();
-		
+
 		contato.setIdContato(UUID.randomUUID());
 		contato.setNome(request.getNome());
 		contato.setEmail(request.getEmail());
 		contato.setTelefone(request.getTelefone());
-		
+
 		ContatoRepository contatoRepository = new ContatoRepository();
-		
-		if(!contatoRepository.isExistsByTelefone(contato.getTelefone(), contato.getIdContato())) {
+
+		if (!contatoRepository.isExistsByTelefone(contato.getTelefone(), contato.getIdContato())) {
 			contatoRepository.create(contato);
 			return "Contato criado com sucesso!";
-		}else {
-			return "O telefone " + contato.getTelefone() + " informado, já está cadastrado em outro contato. Tente com outro numero!";
+		} else {
+			return "O telefone " + contato.getTelefone()
+					+ " informado, já está cadastrado em outro contato. Tente com outro numero!";
 		}
 	}
-	
+
 	@PutMapping("{idContato}")
-	public String put(@PathVariable UUID idContato, @RequestBody @Valid ContatoRequestDto request) throws Exception{
-		
+	public String put(@PathVariable UUID idContato, @RequestBody @Valid ContatoRequestDto request) throws Exception {
+
 		ContatoRepository contatoRepository = new ContatoRepository();
 		var contato = contatoRepository.getById(idContato);
-		
+
 		if (contato != null) {
 			contato.setNome(request.getNome());
 			contato.setEmail(request.getEmail());
 			contato.setTelefone(request.getTelefone());
-			
-			if(!contatoRepository.isExistsByTelefone(contato.getTelefone(), contato.getIdContato())){
+
+			if (!contatoRepository.isExistsByTelefone(contato.getTelefone(), contato.getIdContato())) {
 				contatoRepository.update(contato);
 				return "Contato atualizado com sucesso!";
-			}else {
-				return "Não é possível atualizar os dados pois o Telefone '"
-						+ contato.getTelefone() +"' já pertence a outro contato.";
+			} else {
+				return "Não é possível atualizar os dados pois o Telefone '" + contato.getTelefone()
+						+ "' já pertence a outro contato.";
 			}
-			
-		}else {
+
+		} else {
 			return "Contato não encontrado! Verifique o ID informado.";
 		}
-		
+
 	}
-	
+
 	@DeleteMapping("{idContato}")
-	public String delete(@PathVariable UUID idContato) throws Exception{
+	public String delete(@PathVariable UUID idContato) throws Exception {
 		ContatoRepository contatoRepository = new ContatoRepository();
 		var contato = contatoRepository.getById(idContato);
-		
-		if(contato != null) {
+
+		if (contato != null) {
 			contatoRepository.delete(idContato);
 			return "Contato excluido com sucesso!";
 		}
 		return "Contato não encontrado! Verifique o ID informado.";
 	}
-	
+
 	@GetMapping
-	public List<Contato> getAll() throws Exception{
+	public List<Contato> getAll() throws Exception {
 		ContatoRepository contatoRepository = new ContatoRepository();
 		return contatoRepository.getAll();
 	}
-	
+
 	@GetMapping("{idContato}")
 	public Contato getById(@PathVariable UUID idContato) throws Exception {
-	
-	var contatoRepository = new ContatoRepository();
-	return contatoRepository.getById(idContato);
+
+		var contatoRepository = new ContatoRepository();
+		return contatoRepository.getById(idContato);
 	}
 
 }
