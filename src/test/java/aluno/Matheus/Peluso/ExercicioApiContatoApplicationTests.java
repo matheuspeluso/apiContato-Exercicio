@@ -3,6 +3,7 @@ package aluno.Matheus.Peluso;
 import static org.assertj.core.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
@@ -55,8 +56,29 @@ class ExercicioApiContatoApplicationTests {
 	}
 	
 	@Test
-	public void putTests() {
-		fail("Não implementado");
+	public void putTests() throws Exception{
+		var faker = new Faker();
+		
+		//id do contato que vamos atualizar
+		String id = "b9898409-8745-41b4-8675-d5b4094e7d71";
+		
+		//criar um contato para ser atualizado
+		var dto = new ContatoRequestDto();
+		dto.setNome(faker.name().fullName());
+		dto.setEmail(faker.internet().emailAddress());
+		dto.setTelefone("(11) " + faker.number().digits(5) + "-" + faker.number().digits(4));
+		
+		var result = mockMvc.perform(put("/api/contatos/" + id)
+	            .contentType("application/json")
+	            .content(objectMapper.writeValueAsString(dto)))
+	            .andExpect(status().isOk())
+	            .andReturn();
+		
+		//Verificando a resposta da API após a atualização
+	    String updateContent = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+	    assertTrue(updateContent.contains("Contato atualizado com sucesso."));
+
+		
 	}
 	
 	@Test
