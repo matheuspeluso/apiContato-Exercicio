@@ -25,7 +25,7 @@ public class ContatosController {
 	@Autowired
 	ContatoService contatoService;
 
-	@PostMapping //ok
+	@PostMapping("cadastrar") //ok
 	public String post(@RequestBody @Valid ContatoRequestDto dto) throws Exception {
 		return contatoService.criarContato(dto);
 		
